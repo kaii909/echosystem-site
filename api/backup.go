@@ -43,7 +43,7 @@ func guestbookBackup() {
 	dailyBackupFile := filepath.Join(backupDir, fileName)
 	
 	if errBak := os.WriteFile(dailyBackupFile, data, 0o644); errBak != nil {
-		util.HandleFSError(errBak, backupDir, "Gravação do arquivo de backup cronometrado")
+		util.HandleFSError(errBak, backupDir, "guestbook dailyBackupFile")
 	}
 }
 

@@ -9,7 +9,7 @@ import (
 // HandleFSError handle basic filesystem errors
 func HandleFSError(err error, dirPath, actionContext string) {
 	if err == nil {
-		log.Println("[LOG] '%s' completed succesfully")
+		log.Printf("[LOG] '%v' completed succesfully", actionContext)
 		return
 	}
 

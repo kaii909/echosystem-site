@@ -45,15 +45,19 @@ func main() {
 	api.Backup()
 	mux := http.NewServeMux()
 
+	// serving and handling filesystems //
 	staticFiles, err := fs.Sub(staticFS, "static")
 	if err != nil {
 		log.Fatalf("Failed to create static sub-filesystem: %v", err)
 	}
 
 	fileServer := http.FileServer(http.FS(staticFiles))
-	mux.Handle("/static/", http.StripPrefix("/static/", fileServer))
+	mux.Handle("GET /static/", http.StripPrefix("/static/", fileServer))
+	// === //
 
-	mux.HandleFunc("/", desktopHandler)
+	mux.HandleFunc("/{$}", desktopHandler)
+
+	mux.HandleFunc("/", notFound)
 	api.GuestbookRouting(mux)
 	api.BackupTimer(36 * time.Hour)
 
@@ -61,9 +65,6 @@ func main() {
 	log.Fatal(http.ListenAndServe(":8080", mux))
 }
 
-// ======= //
-// helpers //
-// ======= //
 func desktopHandler(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	err := views.DesktopRoot().Render(ctx, w)
@@ -72,6 +73,17 @@ func desktopHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func notFound(w http.ResponseWriter, r *http.Request) {
+	ctx := r.Context()
+	err := views.NotFound().Render(ctx, w)
+	if err != nil {
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+	}
+}
+
+// ======= //
+// helpers //
+// ======= //
 func cmdMkdir(sudo string, dir string) error {
 	cmdMkdir := exec.Command("sudo", "-S", "mkdir", "-p", dir)
 	userEnv := os.Getenv("USER")

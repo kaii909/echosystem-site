@@ -43,9 +43,7 @@ func saveGuestbook() {
 	data, _ := json.MarshalIndent(guestbook, "", "  ")
 
 	err := os.WriteFile(guestbookFile, data, 0o644)
-	if err != nil {
-		util.HandleFSError(err, GuestbookDir, "saveGuestbook")
-	}
+	util.HandleFSError(err, GuestbookDir, "saveGuestbook")
 }
 
 // Adds a new entry

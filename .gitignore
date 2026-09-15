@@ -24,8 +24,10 @@ dist-ssr
 *.sln
 *.sw?
 
-# unused files (useless for the main branch, at the moment)
+# unused files
 .unused
 
 # databases
 *.json
+
+*_templ.go

@@ -35,7 +35,7 @@ mkdir -p "$OUTPUT_DIR"
 
 # build process
 FULL_OUTPUT="${OUTPUT_DIR}/${BINARY_NAME}"
-LDFLAGS="-X echosystem/util.AppVersion=${GIT_TAG} -X echosystem/util.BuildTime=${BUILD_TIME}"
+LDFLAGS="-X echosystem/util.AppVersion=${GIT_TAG} -X echosystem/util.AppTime=${BUILD_TIME}"
 
 echo "git tag/commit : ${GIT_TAG}"
 echo "build time     : ${BUILD_TIME}"
