@@ -31,20 +31,59 @@ func DesktopRoot() templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<!doctype html><html lang=\"en\"><head><meta charset=\"UTF-8\"><title>echosystem</title><link rel=\"icon\" type=\"image/x-icon\" href=\"/static/assets/favicon.ico\"><link rel=\"stylesheet\" href=\"/static/style.css\"></head><body><div id=\"desktop\"><!-- Desktop icons --><div class=\"desktop-icon\" data-window=\"win-home\"><img src=\"/static/assets/favicon.png\" alt=\"home\"> <span>home</span></div><div class=\"desktop-icon\" data-window=\"win-notepad\"><img src=\"/static/assets/favicon.png\" alt=\"notepad\"> <span>chat</span></div><div id=\"ico-guestbook\" class=\"desktop-icon\" data-window=\"win-guestbook\" hidden><img src=\"/static/assets/favicon.png\" alt=\"guestbook\"> <span>guestbook</span></div><!-- WELCOME WINDOW (appears on first visit) --><div class=\"window window-welcome\" id=\"win-welcome\" style=\"top: 200px; left: 400px; z-index: 100; display: none;\"><div class=\"title-bar\"><span>welcome to the resonant bell world</span><div class=\"window-controls\"><button class=\"btn-close\">X</button></div></div><div class=\"window-content guestbook-welcome-content\"><p>it looks like it's your first time here...</p><p>leave your mark in the guestbook!</p><div class=\"guestbook-input-row\"><input type=\"text\" id=\"welcome-name-input\" placeholder=\"my name is...\" maxlength=\"40\"> <button id=\"welcome-write-btn\" class=\"btn-primary\">WRITE</button> <button id=\"welcome-skip-btn\" class=\"btn-secondary\">SKIP</button></div></div></div><!-- Windows --><div class=\"window\" id=\"win-home\" style=\"top: 50px; left: 50px; z-index: 1;\"><div class=\"title-bar\"><span>computer</span><div class=\"window-controls\"><button class=\"btn-minimize\">_</button> <button class=\"btn-maximize\">□</button> <button class=\"btn-close\">X</button></div></div><div class=\"window-content\"><p>welcome!</p></div></div><div class=\"window\" id=\"win-notepad\" style=\"top: 100px; left: 300px; z-index: 2; display: none;\"><div class=\"title-bar\"><span>Bloco de Notas</span><div class=\"window-controls\"><button class=\"btn-minimize\">_</button> <button class=\"btn-maximize\">□</button> <button class=\"btn-close\">X</button></div></div><div class=\"window-content\"><textarea style=\"width: 100%; height: 200px; border: 1px solid #ccc;\"></textarea></div></div><div class=\"window\" id=\"win-guestbook\" style=\"top: 80px; left: 250px; z-index: 2; display: none;\"><div class=\"title-bar\"><span>Guestbook</span><div class=\"window-controls\"><button class=\"btn-minimize\">_</button> <button class=\"btn-maximize\">□</button> <button class=\"btn-close\">X</button></div></div><div class=\"window-content guestbook-content\"><div id=\"guestbook-write-section\" style=\"display: none;\"><p>Sign the guestbook:</p><div class=\"guestbook-input-row\"><input type=\"text\" id=\"guestbook-name-input\" placeholder=\"your name...\" maxlength=\"40\"> <button id=\"guestbook-submit-btn\" class=\"btn-primary\">SIGN</button></div><hr class=\"guestbook-divider\"></div><div id=\"guestbook-read-section\"><h3>Recent signatures:</h3><div id=\"guestbook-list\" class=\"guestbook-list\"></div></div></div></div></div><div id=\"taskbar\"><!-- <button id=\"start-btn\">home</button> --><div id=\"taskbar-windows\"></div></div><script src=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<!doctype html><html lang=\"en\"><head><meta charset=\"UTF-8\"><title>echosystem</title><link rel=\"icon\" type=\"image/x-icon\" href=\"/static/assets/favicon.ico\"><link rel=\"stylesheet\" href=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var2 string
-		templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.ResolveAttributeValue("/static/desktop.js?v=" + version.AppVersion)
+		var templ_7745c5c3_Var2 templ.SafeURL
+		templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinURLErrs("/static/style.css?v=" + util.AppVersion)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/home.templ`, Line: 103, Col: 61}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/home.templ`, Line: 12, Col: 73}
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var2)
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "\" defer></script></body></html>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "\"><script src=\"")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		var templ_7745c5c3_Var3 string
+		templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.ResolveAttributeValue("/static/desktop.js?v=" + util.AppVersion)
+		if templ_7745c5c3_Err != nil {
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/home.templ`, Line: 13, Col: 58}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var3)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "\" defer></script></head><body><div id=\"desktop\"><!-- Desktop icons --><div class=\"desktop-icon\" data-window=\"win-home\"><img src=\"/static/assets/favicon.png\" alt=\"home\"> <span>home</span></div><div class=\"desktop-icon\" data-window=\"win-notepad\"><img src=\"/static/assets/favicon.png\" alt=\"notepad\"> <span>chat</span></div><div id=\"ico-file-explorer\" class=\"desktop-icon\" data-window=\"win-file-explorer\"><img src=\"/static/assets/favicon.png\" alt=\"file explorer\"> <span>file explorer</span></div><div id=\"ico-guestbook\" class=\"desktop-icon\" data-window=\"win-guestbook\" hidden=\"true\"><img src=\"/static/assets/favicon.png\" alt=\"guestbook\"> <span>guestbook</span></div><!-- Background --><div class=\"version-watermark\"><img class=\"corner-desktop-icon\" src=\"/static/assets/wip.svg\"> <a href=\"")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		var templ_7745c5c3_Var4 templ.SafeURL
+		templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinURLErrs("https://github.com/kaii909/echosystemsite/commit/" + util.AppVersion)
+		if templ_7745c5c3_Err != nil {
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/home.templ`, Line: 37, Col: 84}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "\" target=\"_blank\" rel=\"noopener noreferrer\">commit ")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		var templ_7745c5c3_Var5 string
+		templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(util.AppVersion)
+		if templ_7745c5c3_Err != nil {
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/home.templ`, Line: 38, Col: 30}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "</a></div><div class=\"blinkies\"><a class=\"blinkie\" href=\"https://echosystem.wroof.net/\"><img src=\"/static/assets/blinkie-echosys.webp\"></a></div><!-- WELCOME WINDOW (appears on first visit) --><div class=\"window window-welcome\" id=\"win-welcome\" style=\"top: 200px; left: 400px; z-index: 100; display: none;\"><div class=\"title-bar\"><span>welcome to the resonant bell world</span><div class=\"window-controls\"><button class=\"btn-close\">X</button></div></div><div class=\"window-content guestbook-welcome-content\"><p>it looks like it's your first time here...</p><p>leave your mark in the guestbook!</p><div class=\"guestbook-input-row\"><input type=\"text\" id=\"welcome-name-input\" placeholder=\"my name is...\" maxlength=\"40\"> <button id=\"welcome-write-btn\" class=\"btn-primary\">WRITE</button> <button id=\"welcome-skip-btn\" class=\"btn-secondary\">SKIP</button></div></div></div><!-- --><!-- Windows --><!-- --><div class=\"window\" id=\"win-home\" style=\"top: 50px; left: 50px; z-index: 1;\"><div class=\"title-bar\"><span>computer</span><div class=\"window-controls\"><button class=\"btn-minimize\">_</button> <button class=\"btn-maximize\">□</button> <button class=\"btn-close\">X</button></div></div><div class=\"window-content\"><p>welcome!</p><p></p><p>this place is under construction, cya in the future.</p></div></div><!-- --><div class=\"window\" id=\"win-notepad\" style=\"top: 100px; left: 300px; z-index: 2; display: none;\"><div class=\"title-bar\"><span>unfinished</span><div class=\"window-controls\"><button class=\"btn-minimize\">_</button> <button class=\"btn-maximize\">□</button> <button class=\"btn-close\">X</button></div></div><div class=\"window-content\"><textarea style=\"width: 100%; height: 200px; border: 1px solid #ccc;\"></textarea></div></div><!-- guestbook --><div class=\"window\" id=\"win-guestbook\" style=\"top: 80px; left: 250px; z-index: 3; display: none;\"><div class=\"title-bar\"><span>guestbook</span><div class=\"window-controls\"><button class=\"btn-minimize\">_</button> <button class=\"btn-maximize\">□</button> <button class=\"btn-close\">X</button></div></div><div class=\"window-content guestbook-content\"><div id=\"guestbook-write-section\" style=\"display: none;\"><p>sign the guestbook:</p><div class=\"guestbook-input-row\"><input type=\"text\" id=\"guestbook-name-input\" placeholder=\"your name...\" maxlength=\"40\"> <button id=\"guestbook-submit-btn\" class=\"btn-primary\">SIGN</button></div><hr class=\"guestbook-divider\"></div><div id=\"guestbook-read-section\"><h3>recent signatures:</h3><div id=\"guestbook-list\" class=\"guestbook-list\"></div></div></div></div><!-- file explorer --><div class=\"window\" id=\"win-file-explorer\" style=\"top: 150px; left: 350px; z-index: 4; display: none;\"><div class=\"title-bar\"><span>file explorer</span><div class=\"window-controls\"><button class=\"btn-minimize\">_</button> <button class=\"btn-maximize\">□</button> <button class=\"btn-close\">X</button></div></div><div class=\"file explorer\"></div></div></div><div id=\"taskbar\"><!-- <button id=\"start-btn\">home</button> --><div id=\"taskbar-windows\"></div></div></body></html>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

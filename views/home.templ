@@ -9,7 +9,8 @@ templ DesktopRoot() {
 			<meta charset="UTF-8"/>
 			<title>echosystem</title>
 			<link rel="icon" type="image/x-icon" href="/static/assets/favicon.ico"/>
-			<link rel="stylesheet" href="/static/style.css"/>
+			<link rel="stylesheet" href={ "/static/style.css?v=" + util.AppVersion }/>
+			<script src={ "/static/desktop.js?v=" + util.AppVersion } defer></script>
 		</head>
 		<body>
 			<div id="desktop">
@@ -22,9 +23,25 @@ templ DesktopRoot() {
 					<img src="/static/assets/favicon.png" alt="notepad"/>
 					<span>chat</span>
 				</div>
-				<div id="ico-guestbook" class="desktop-icon" data-window="win-guestbook" hidden>
+				<div id="ico-file-explorer" class="desktop-icon" data-window="win-file-explorer">
+					<img src="/static/assets/favicon.png" alt="file explorer"/>
+					<span>file explorer</span>
+				</div>
+				<div id="ico-guestbook" class="desktop-icon" data-window="win-guestbook" hidden="true">
 					<img src="/static/assets/favicon.png" alt="guestbook"/>
 					<span>guestbook</span>
+				</div>
+				<!-- Background -->
+				<div class="version-watermark">
+					<img class="corner-desktop-icon" src="/static/assets/wip.svg"/>
+					<a href={ "https://github.com/kaii909/echosystemsite/commit/" + util.AppVersion } target="_blank" rel="noopener noreferrer">
+						commit { util.AppVersion }
+					</a>
+				</div>
+				<div class="blinkies">
+					<a class="blinkie" href="https://echosystem.wroof.net/">
+						<img src="/static/assets/blinkie-echosys.webp"/>
+					</a>
 				</div>
 				<!-- WELCOME WINDOW (appears on first visit) -->
 				<div class="window window-welcome" id="win-welcome" style="top: 200px; left: 400px; z-index: 100; display: none;">
@@ -44,7 +61,9 @@ templ DesktopRoot() {
 						</div>
 					</div>
 				</div>
+				<!-- -->
 				<!-- Windows -->
+				<!-- -->
 				<div class="window" id="win-home" style="top: 50px; left: 50px; z-index: 1;">
 					<div class="title-bar">
 						<span>computer</span>
@@ -56,11 +75,14 @@ templ DesktopRoot() {
 					</div>
 					<div class="window-content">
 						<p>welcome!</p>
+						<p></p>
+						<p>this place is under construction, cya in the future.</p>
 					</div>
 				</div>
+				<!-- -->
 				<div class="window" id="win-notepad" style="top: 100px; left: 300px; z-index: 2; display: none;">
 					<div class="title-bar">
-						<span>Bloco de Notas</span>
+						<span>unfinished</span>
 						<div class="window-controls">
 							<button class="btn-minimize">_</button>
 							<button class="btn-maximize">□</button>
@@ -71,9 +93,10 @@ templ DesktopRoot() {
 						<textarea style="width: 100%; height: 200px; border: 1px solid #ccc;"></textarea>
 					</div>
 				</div>
-				<div class="window" id="win-guestbook" style="top: 80px; left: 250px; z-index: 2; display: none;">
+				<!-- guestbook -->
+				<div class="window" id="win-guestbook" style="top: 80px; left: 250px; z-index: 3; display: none;">
 					<div class="title-bar">
-						<span>Guestbook</span>
+						<span>guestbook</span>
 						<div class="window-controls">
 							<button class="btn-minimize">_</button>
 							<button class="btn-maximize">□</button>
@@ -82,7 +105,7 @@ templ DesktopRoot() {
 					</div>
 					<div class="window-content guestbook-content">
 						<div id="guestbook-write-section" style="display: none;">
-							<p>Sign the guestbook:</p>
+							<p>sign the guestbook:</p>
 							<div class="guestbook-input-row">
 								<input type="text" id="guestbook-name-input" placeholder="your name..." maxlength="40"/>
 								<button id="guestbook-submit-btn" class="btn-primary">SIGN</button>
@@ -90,17 +113,28 @@ templ DesktopRoot() {
 							<hr class="guestbook-divider"/>
 						</div>
 						<div id="guestbook-read-section">
-							<h3>Recent signatures:</h3>
+							<h3>recent signatures:</h3>
 							<div id="guestbook-list" class="guestbook-list"></div>
 						</div>
 					</div>
+				</div>
+				<!-- file explorer -->
+				<div class="window" id="win-file-explorer" style="top: 150px; left: 350px; z-index: 4; display: none;">
+					<div class="title-bar">
+						<span>file explorer</span>
+						<div class="window-controls">
+							<button class="btn-minimize">_</button>
+							<button class="btn-maximize">□</button>
+							<button class="btn-close">X</button>
+						</div>
+					</div>
+					<div class="file explorer"></div>
 				</div>
 			</div>
 			<div id="taskbar">
 				<!-- <button id="start-btn">home</button> -->
 				<div id="taskbar-windows"></div>
 			</div>
-			<script src={ "/static/desktop.js?v=" + version.AppVersion } defer></script>
 		</body>
 	</html>
 }

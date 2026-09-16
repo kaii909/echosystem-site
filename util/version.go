@@ -1,8 +1,9 @@
-package version
+package util
 
 import (
 	"fmt"
 	"time"
 )
 
-var AppVersion = fmt.Sprintf("%d", time.Now().Unix())
+var AppTime = fmt.Sprintf("%d", time.Now().Unix())
+var AppVersion = "dev"

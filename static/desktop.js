@@ -31,8 +31,6 @@ function toggleMaximize(win) {
 }
 
 function setWindowSize(win) {
-  // SÓ guarda o tamanho original se ela NÃO estiver maximizada ainda
-  // Isso impede que o resize do navegador destrua o tamanho padrão da janela
   if (win.dataset.maximized !== "true") {
     win.dataset.originalWidth = win.style.width || win.offsetWidth + "px";
     win.dataset.originalHeight = win.style.height || win.offsetHeight + "px";
@@ -40,7 +38,6 @@ function setWindowSize(win) {
     win.dataset.originalLeft = win.style.left || "50px";
   }
 
-  // Atualiza para o novo tamanho do navegador (comportamento do resize)
   win.style.height = window.innerHeight - 31 + "px";
   win.style.top = "0";
   win.style.left = "0";
@@ -58,7 +55,7 @@ function initializeWindows() {
     attachButtonBehavior(win);
     if (win.style.display !== "none") {
       addWindowToTaskbar(win);
-    };
+    }
   });
 }
 
@@ -100,8 +97,14 @@ function attachDragBehavior(win) {
           let newTop = moveEvent.clientY - 20;
 
           // Apply boundary checks
-          newLeft = Math.max(0, Math.min(newLeft, window.innerWidth - win.offsetWidth));
-          newTop = Math.max(0, Math.min(newTop, window.innerHeight - win.offsetHeight - 30));
+          newLeft = Math.max(
+            0,
+            Math.min(newLeft, window.innerWidth - win.offsetWidth),
+          );
+          newTop = Math.max(
+            0,
+            Math.min(newTop, window.innerHeight - win.offsetHeight - 30),
+          );
 
           // Apply the new position
           win.style.left = newLeft + "px";
@@ -110,7 +113,7 @@ function attachDragBehavior(win) {
           // offset recalc
           shiftX = moveEvent.clientX - newLeft;
           shiftY = moveEvent.clientY - newTop;
-          
+
           hasRestoredThisDrag = true;
         }
       }
@@ -120,7 +123,10 @@ function attachDragBehavior(win) {
 
       // Keep window within viewport boundaries
       newX = Math.max(0, Math.min(newX, window.innerWidth - win.offsetWidth));
-      newY = Math.max(0, Math.min(newY, window.innerHeight - win.offsetHeight - 30));
+      newY = Math.max(
+        0,
+        Math.min(newY, window.innerHeight - win.offsetHeight - 30),
+      );
 
       win.style.left = newX + "px";
       win.style.top = newY + "px";
@@ -257,39 +263,40 @@ function initializeGuestbook() {
   const hasSeen = localStorage.getItem(LS_SEEN);
   const hasWritten = localStorage.getItem(LS_WRITTEN);
 
-  // Cache DOM elements to avoid redefining them
+  // cache DOM elements
   const targetDiv = document.getElementById("ico-guestbook");
   const winWelcome = document.getElementById("win-welcome");
   const writeSection = document.getElementById("guestbook-write-section");
+  const welcomeNameInput = document.getElementById("welcome-name-input");
   const welcomeWriteBtn = document.getElementById("welcome-write-btn");
   const welcomeSkipBtn = document.getElementById("welcome-skip-btn");
+  const guestbookNameInput = document.getElementById("guestbook-name-input");
   const guestbookSubmitBtn = document.getElementById("guestbook-submit-btn");
   const welcomeClose = document.querySelector("#win-welcome .btn-close");
-  const welcomeNameInput = document.getElementById("welcome-name-input");
-  const guestbookNameInput = document.getElementById("guestbook-name-input");
 
+  // helper to reveal the guestbook icon
   function showTargetDiv() {
-    if (targetDiv) targetDiv.hidden = false;
+    if (targetDiv) targetDiv.classList.remove("hidden");
   }
 
-  // 1. Show welcome window only on first visit
+  // show welcome window only on first visit
   if (!hasSeen) {
     if (winWelcome) {
       winWelcome.style.display = "block";
       bringToFront(winWelcome);
     }
+    // hide icon using classlist to respect css cascade
+    if (targetDiv) targetDiv.classList.add("hidden");
   } else {
     showTargetDiv();
   }
 
-  // 2. Control the write section state explicitly
   if (writeSection) {
     writeSection.style.display = hasWritten ? "none" : "block";
   }
 
-  // 3. Welcome window: WRITE button
-  if (welcomeWriteBtn) {
-    welcomeWriteBtn.addEventListener("click", () => {
+  if (welcomeNameInput && welcomeWriteBtn) {
+    const onWelcomeSubmit = () => {
       submitGuestbookEntry(welcomeNameInput.value, () => {
         localStorage.setItem(LS_SEEN, "1");
         localStorage.setItem(LS_WRITTEN, "1");
@@ -297,10 +304,18 @@ function initializeGuestbook() {
         showTargetDiv();
         if (writeSection) writeSection.style.display = "none";
       });
+    };
+
+    welcomeWriteBtn.addEventListener("click", onWelcomeSubmit);
+
+    welcomeNameInput.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        e.preventDefault(); // prevent default form submission behavior
+        onWelcomeSubmit();
+      }
     });
   }
 
-  // 4. Welcome window: SKIP button
   if (welcomeSkipBtn) {
     welcomeSkipBtn.addEventListener("click", () => {
       localStorage.setItem(LS_SEEN, "1");
@@ -309,18 +324,25 @@ function initializeGuestbook() {
     });
   }
 
-  // 5. Guestbook program: SIGN button
-  if (guestbookSubmitBtn) {
-    guestbookSubmitBtn.addEventListener("click", () => {
+  if (guestbookNameInput && guestbookSubmitBtn) {
+    const onGuestbookSubmit = () => {
       submitGuestbookEntry(guestbookNameInput.value, () => {
         localStorage.setItem(LS_WRITTEN, "1");
         if (writeSection) writeSection.style.display = "none";
-        guestbookNameInput.value = "";
+        guestbookNameInput.value = ""; // Clear input after success
       });
+    };
+
+    guestbookSubmitBtn.addEventListener("click", onGuestbookSubmit);
+
+    guestbookNameInput.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        onGuestbookSubmit();
+      }
     });
   }
 
-  // 6. Welcome window: close button (X)
   if (welcomeClose) {
     welcomeClose.addEventListener("click", () => {
       localStorage.setItem(LS_SEEN, "1");
@@ -330,11 +352,10 @@ function initializeGuestbook() {
   }
 }
 
-// Sends entry to backend
 function submitGuestbookEntry(name, onSuccess) {
   name = name.trim();
   if (!name) {
-    alert("Please enter a name!");
+    alert("plz enter a name!");
     return;
   }
 
@@ -357,7 +378,6 @@ function submitGuestbookEntry(name, onSuccess) {
     });
 }
 
-// Fetches and renders all entries
 function loadGuestbookEntries() {
   fetch("/api/guestbook")
     .then((res) => res.json())
@@ -367,7 +387,7 @@ function loadGuestbookEntries() {
 
       if (entries.length === 0) {
         list.innerHTML =
-          "<p class='guestbook-empty'>No signatures yet. Be the first!</p>";
+          "<p class='guestbook-empty'>no signatures yet. be the first!</p>";
         return;
       }
 
@@ -383,7 +403,7 @@ function loadGuestbookEntries() {
         )
         .join("");
     })
-    .catch((err) => console.error("Failed to load entries:", err));
+    .catch((err) => console.error("failed to load entries:", err));
 }
 
 // Prevents XSS attacks when rendering user input

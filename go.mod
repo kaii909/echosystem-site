@@ -2,7 +2,10 @@ module echosystem
 
 go 1.27.0
 
-require github.com/a-h/templ v0.3.1020
+require (
+	github.com/a-h/templ v0.3.1020
+	golang.org/x/term v0.46.0
+)
 
 require (
 	github.com/a-h/parse v0.0.0-20250122154542-74294addb73e // indirect
@@ -17,7 +20,7 @@ require (
 	golang.org/x/mod v0.26.0 // indirect
 	golang.org/x/net v0.51.0 // indirect
 	golang.org/x/sync v0.16.0 // indirect
-	golang.org/x/sys v0.41.0 // indirect
+	golang.org/x/sys v0.48.0 // indirect
 	golang.org/x/tools v0.35.0 // indirect
 )
 
