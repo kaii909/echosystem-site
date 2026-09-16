@@ -355,7 +355,7 @@ function initializeGuestbook() {
 function submitGuestbookEntry(name, onSuccess) {
   name = name.trim();
   if (!name) {
-    alert("Please enter a name!");
+    alert("plz enter a name!");
     return;
   }
 
@@ -387,7 +387,7 @@ function loadGuestbookEntries() {
 
       if (entries.length === 0) {
         list.innerHTML =
-          "<p class='guestbook-empty'>No signatures yet. Be the first!</p>";
+          "<p class='guestbook-empty'>no signatures yet. be the first!</p>";
         return;
       }
 
@@ -403,7 +403,7 @@ function loadGuestbookEntries() {
         )
         .join("");
     })
-    .catch((err) => console.error("Failed to load entries:", err));
+    .catch((err) => console.error("failed to load entries:", err));
 }
 
 // Prevents XSS attacks when rendering user input
