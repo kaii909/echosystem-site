@@ -428,6 +428,7 @@ const VIEWABLE_EXTENSIONS = [
   "mp3",
   "wav",
   "ogg",
+  "html",
 ];
 
 function initializeExplorer() {
@@ -513,6 +514,15 @@ function loadExplorerDirectory(path) {
           }
         });
 
+        // open the custom contextmenu, for copying links
+        if (!item.is_dir && item.name !== "..") {
+          div.addEventListener("contextmenu", (e) => {
+            const fileUrl = buildPublicUrl(item.name);
+            const fullUrl = window.location.origin + fileUrl;
+            showContextMenu(e, fullUrl);
+          });
+        }
+
         listContainer.appendChild(div);
       });
     })
@@ -569,6 +579,52 @@ function openPublicFile(name) {
   document.body.appendChild(link);
   link.click();
   link.remove();
+}
+
+// ============================================
+// CONTEXT MENU LOGIC
+// ============================================
+const contextMenu = document.getElementById("context-menu");
+let currentContextUrl = ""; // Stores the URL of the clicked file
+
+// Hide menu when clicking anywhere else
+document.addEventListener("click", () => {
+  if (contextMenu) contextMenu.classList.add("hidden");
+});
+
+// Prevent default browser menu on our custom menu
+if (contextMenu) {
+  contextMenu.addEventListener("contextmenu", (e) => e.preventDefault());
+
+  // Action: Copy Link
+  document.getElementById("ctx-copy-link").addEventListener("click", () => {
+    navigator.clipboard.writeText(currentContextUrl).then(() => {
+      console.log("Link copied:", currentContextUrl);
+      // Optional: visual feedback
+      const btn = document.getElementById("ctx-copy-link");
+      const originalText = btn.innerText;
+      btn.innerText = "✅ Copied!";
+      setTimeout(() => (btn.innerText = originalText), 1000);
+    });
+  });
+
+  // Action: Open in New Tab
+  document.getElementById("ctx-open-tab").addEventListener("click", () => {
+    window.open(currentContextUrl, "_blank");
+  });
+}
+
+// Function to show the menu at mouse position
+function showContextMenu(e, url) {
+  e.preventDefault(); // Stop browser default menu
+  currentContextUrl = url;
+
+  if (!contextMenu) return;
+
+  // Position menu at cursor
+  contextMenu.style.left = `${e.pageX}px`;
+  contextMenu.style.top = `${e.pageY}px`;
+  contextMenu.classList.remove("hidden");
 }
 
 // =============================================================

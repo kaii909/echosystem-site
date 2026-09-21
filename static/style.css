@@ -490,3 +490,30 @@ html {
     opacity: 0.6;
     font-style: italic;
 }
+
+/* === CONTEXT MENU === */
+.context-menu {
+    position: absolute;
+    z-index: 10000;
+    background: var(--window-bg);
+    border: 1px solid var(--window-border);
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.5);
+    padding: 4px 0;
+    min-width: 150px;
+    font-family: var(--font);
+    font-size: var(--font-size);
+}
+
+.context-item {
+    padding: 6px 12px;
+    color: var(--content-text);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.context-item:hover {
+    background: var(--btn-hover-bg);
+    color: var(--desktop-icon-text);
+}

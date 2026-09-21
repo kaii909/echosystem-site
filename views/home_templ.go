@@ -91,7 +91,7 @@ func DesktopRoot() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "</div><div id=\"taskbar\"><!-- <button id=\"start-btn\">home</button> --><div id=\"taskbar-windows\"></div></div></body></html>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "</div><div id=\"taskbar\"><!-- <button id=\"start-btn\">home</button> --><div id=\"taskbar-windows\"></div></div><div id=\"context-menu\" class=\"context-menu hidden\"><div class=\"context-item\" id=\"ctx-copy-link\">copy link</div><div class=\"context-item\" id=\"ctx-open-tab\">open in new tab</div></div></body></html>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

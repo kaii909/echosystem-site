@@ -12,6 +12,7 @@ import (
 	"time"
 
 	"echosystem/util"
+	"echosystem/views"
 )
 
 // FileItem represents a single file or directory in the explorer
@@ -29,7 +30,8 @@ func init() {
 	// Resolve $HOME/public to an absolute path securely
 	homeDir, err := os.UserHomeDir()
 	if err != nil {
-		homeDir = "/tmp" // Fallback if home dir is not found
+		fmt.Print("[FATAL] no home directory")
+		os.Exit(1)
 	}
 	BaseDir = filepath.Join(homeDir, "public")
 
@@ -166,13 +168,11 @@ func PublicFileHandler(w http.ResponseWriter, r *http.Request) {
 
 	info, err := os.Stat(absFullPath)
 	if err != nil || info.IsDir() {
-		http.Error(w, "not found", http.StatusNotFound)
-		return
-	}
-
-	// security: hide dotfiles from public access
-	if strings.HasPrefix(info.Name(), ".") {
-		http.Error(w, "not found", http.StatusNotFound)
+		ctx := r.Context()
+		err := views.NotAcceptable().Render(ctx, w)
+		if err != nil {
+			http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		}
 		return
 	}
 

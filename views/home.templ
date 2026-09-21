@@ -118,12 +118,16 @@ templ DesktopRoot() {
 						</div>
 					</div>
 				</div>
-        <!-- file explorer -->
-        @FileExplorerWindow()
+				<!-- file explorer -->
+				@FileExplorerWindow()
 			</div>
 			<div id="taskbar">
 				<!-- <button id="start-btn">home</button> -->
 				<div id="taskbar-windows"></div>
+			</div>
+			<div id="context-menu" class="context-menu hidden">
+				<div class="context-item" id="ctx-copy-link">copy link</div>
+				<div class="context-item" id="ctx-open-tab">open in new tab</div>
 			</div>
 		</body>
 	</html>
