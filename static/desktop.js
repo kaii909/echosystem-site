@@ -4,6 +4,7 @@ document.addEventListener("DOMContentLoaded", () => {
   initializeWindows();
   initializeDesktopIcons();
   initializeGuestbook();
+  initializeExplorer();
 });
 
 window.addEventListener("resize", () => {
@@ -405,6 +406,174 @@ function loadGuestbookEntries() {
     })
     .catch((err) => console.error("failed to load entries:", err));
 }
+
+// ============================================
+// FILE EXPLORER
+// ============================================
+let currentExplorerPath = "/";
+
+// extensions the browser renders natively
+const VIEWABLE_EXTENSIONS = [
+  "png",
+  "jpg",
+  "jpeg",
+  "gif",
+  "webp",
+  "svg",
+  "txt",
+  "md",
+  "pdf",
+  "mp4",
+  "webm",
+  "mp3",
+  "wav",
+  "ogg",
+];
+
+function initializeExplorer() {
+  const explorerIcon = document.querySelector('[data-window="win-explorer"]');
+  if (explorerIcon) {
+    explorerIcon.addEventListener("dblclick", () => {
+      const win = document.getElementById("win-explorer");
+      if (win) {
+        win.style.display = "block";
+        bringToFront(win);
+        addWindowToTaskbar(win);
+        loadExplorerDirectory("/");
+      }
+    });
+  }
+
+  // navigateUp is a "cd ../" like function (has api protections too)
+  const upBtn = document.getElementById("explorer-up-btn");
+  if (upBtn) {
+    upBtn.addEventListener("click", () => {
+      navigateUp();
+    });
+  }
+}
+
+function loadExplorerDirectory(path) {
+  currentExplorerPath = path;
+  const listContainer = document.getElementById("explorer-list");
+  const pathDisplay = document.getElementById("explorer-path-display");
+  const upBtn = document.getElementById("explorer-up-btn");
+
+  if (pathDisplay) pathDisplay.textContent = path === "/" ? "/" : path;
+  if (upBtn) upBtn.disabled = path === "/";
+  if (listContainer)
+    listContainer.innerHTML = '<p class="explorer-loading">Loading...</p>';
+
+  fetch(`/api/files?path=${encodeURIComponent(path)}`)
+    .then((res) => {
+      if (!res.ok) throw new Error("failed to load directory");
+      return res.json();
+    })
+    .then((items) => {
+      if (!listContainer) return;
+      listContainer.innerHTML = "";
+
+      if (items.length <= 1) {
+        listContainer.innerHTML +=
+          '<p class="explorer-empty">this folder is empty</p>';
+        return;
+      }
+
+      items.forEach((item) => {
+        const div = document.createElement("div");
+        div.className = `explorer-item ${item.is_dir ? "is-dir" : "is-file"}`;
+
+        const icon = item.is_dir ? "📁" : "📄";
+
+        // condition so size isnt showed for directories
+        if (item.is_dir !== false) {
+          div.innerHTML = `
+                    <span class="explorer-icon">${icon}</span>
+                    <span class="explorer-name">${escapeHtml(item.name)}</span>
+                `;
+        } else {
+          div.innerHTML = `
+                    <span class="explorer-icon">${icon}</span>
+                    <span class="explorer-name">${escapeHtml(item.name)}</span>
+                    <span class="explorer-size">${formatFileSize(item.size)}</span>
+                `;
+        }
+
+        div.addEventListener("dblclick", () => {
+          if (item.name === "..") {
+            navigateUp();
+          } else if (item.is_dir) {
+            const newPath =
+              currentExplorerPath === "/"
+                ? `/${item.name}`
+                : `${currentExplorerPath}/${item.name}`;
+            loadExplorerDirectory(newPath);
+          } else {
+            openPublicFile(item.name);
+          }
+        });
+
+        listContainer.appendChild(div);
+      });
+    })
+    .catch((err) => {
+      console.error("Explorer error:", err);
+      if (listContainer)
+        listContainer.innerHTML =
+          '<p class="explorer-error">error loading files</p>';
+    });
+}
+
+function navigateUp() {
+  if (currentExplorerPath === "/") return;
+  const parts = currentExplorerPath.split("/").filter((p) => p !== "");
+  parts.pop();
+  const newPath = parts.length === 0 ? "/" : "/" + parts.join("/");
+  loadExplorerDirectory(newPath);
+}
+
+function formatFileSize(bytes) {
+  if (bytes === 0) return "0 B";
+  const k = 1024;
+  const sizes = ["B", "KB", "MB", "GB"];
+  const i = Math.floor(Math.log(bytes) / Math.log(k));
+  return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + " " + sizes[i];
+}
+
+// builds the public url for a file inside the current directory
+function buildPublicUrl(name) {
+  const base = currentExplorerPath === "/" ? "" : currentExplorerPath;
+  return "/public" + base + "/" + encodeURIComponent(name);
+}
+
+// checks if the browser can render the file natively
+function isViewableFile(name) {
+  const parts = name.split(".");
+  if (parts.length < 2) return false;
+  const ext = parts.pop().toLowerCase();
+  return VIEWABLE_EXTENSIONS.includes(ext);
+}
+
+// opens viewable files in a new tab, downloads everything else
+function openPublicFile(name) {
+  const url = buildPublicUrl(name);
+
+  if (isViewableFile(name)) {
+    window.open(url, "_blank");
+    return;
+  }
+
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = name;
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+}
+
+// =============================================================
+// etc
+// =============================================================
 
 // Prevents XSS attacks when rendering user input
 function escapeHtml(text) {
