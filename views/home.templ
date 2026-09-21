@@ -23,7 +23,7 @@ templ DesktopRoot() {
 					<img src="/static/assets/favicon.png" alt="notepad"/>
 					<span>chat</span>
 				</div>
-				<div id="ico-file-explorer" class="desktop-icon" data-window="win-file-explorer">
+				<div id="ico-file-explorer" class="desktop-icon" data-window="win-explorer">
 					<img src="/static/assets/favicon.png" alt="file explorer"/>
 					<span>file explorer</span>
 				</div>
@@ -119,22 +119,40 @@ templ DesktopRoot() {
 					</div>
 				</div>
 				<!-- file explorer -->
-				<div class="window" id="win-file-explorer" style="top: 150px; left: 350px; z-index: 4; display: none;">
-					<div class="title-bar">
-						<span>file explorer</span>
-						<div class="window-controls">
-							<button class="btn-minimize">_</button>
-							<button class="btn-maximize">□</button>
-							<button class="btn-close">X</button>
-						</div>
-					</div>
-					<div class="file explorer"></div>
-				</div>
+				@FileExplorerWindow()
 			</div>
 			<div id="taskbar">
 				<!-- <button id="start-btn">home</button> -->
 				<div id="taskbar-windows"></div>
 			</div>
+			<div id="context-menu" class="context-menu hidden">
+				<div class="context-item" id="ctx-copy-link">copy link</div>
+				<div class="context-item" id="ctx-open-tab">open in new tab</div>
+			</div>
 		</body>
 	</html>
+}
+
+// the file explorer stuff, separated for organizing
+templ FileExplorerWindow() {
+	<div class="window" id="win-explorer" style="top: 100px; left: 200px; z-index: 5; display: none; width: 500px;">
+		<div class="title-bar">
+			<span>file explorer</span>
+			<div class="window-controls">
+				<button class="btn-minimize">_</button>
+				<button class="btn-maximize">□</button>
+				<button class="btn-close">X</button>
+			</div>
+		</div>
+		<div class="window-content explorer-content">
+			<div class="explorer-toolbar">
+				<button id="explorer-up-btn" class="btn-secondary" disabled>return</button>
+				<span id="explorer-path-display" class="explorer-path">/</span>
+			</div>
+			<div id="explorer-list" class="explorer-list">
+				<!-- files will be injected here by JS -->
+				<p class="explorer-loading">Loading...</p>
+			</div>
+		</div>
+	</div>
 }

@@ -14,10 +14,11 @@ import (
 	"strings"
 	"time"
 
-	"golang.org/x/term"
 	"echosystem/api"
 	"echosystem/util"
 	"echosystem/views"
+
+	"golang.org/x/term"
 )
 
 //go:embed static/*
@@ -53,6 +54,8 @@ func main() {
 
 	fileServer := http.FileServer(http.FS(staticFiles))
 	mux.Handle("GET /static/", http.StripPrefix("/static/", fileServer))
+	mux.HandleFunc("/api/files", api.FileExplorerHandler)
+	mux.HandleFunc("/public/", api.PublicFileHandler)
 	// === //
 
 	mux.HandleFunc("/{$}", desktopHandler)

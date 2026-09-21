@@ -1,0 +1,27 @@
+package views
+
+import "echosystem/util"
+
+templ NotAcceptable() {
+	<!DOCTYPE html>
+	<html lang="en">
+		<head>
+			<meta charset="UTF-8"/>
+			<title>404</title>
+			<!-- <link rel="icon" type="image/x-icon" href="/static/assets/favicon.ico"/> -->
+			<link rel="stylesheet" href={ "/static/style.css?v=" + util.AppVersion }/>
+			<!-- <script src={ "/static/desktop.js?v=" + util.AppVersion } defer></script> -->
+		</head>
+		<body id="not-found">
+			<h1>406</h1>
+			<p>where am i? what is this?</p>
+      <p style="font-size: 12px; color: #aaaaaa;">URL exists, but can't be displayed</p>
+			<p></p>
+			<div>
+				<a class="blinkie" href="https://echosystem.wroof.net/">
+					<img src="/static/assets/blinkie-echosys.webp"/>
+				</a>
+			</div>
+		</body>
+	</html>
+}
